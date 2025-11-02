@@ -1,0 +1,5 @@
+[
+    {"id":1,"title":"Range ton espace de travail","mood":"stressé-e","type":"self-care","difficulty":1,"points":5},
+    {"id":2,"title":"Envoie un message sincère à un ou une amie", "mood":"triste","type":"social","difficulty":2,"points":8},
+    {"id":3,"title":"Marche 15 min sans téléphone","mood":"fatigué-e","type":"self-care","difficulty":2,"points":4}
+]

@@ -1,0 +1,123 @@
+Concept global
+
+“Reet” est une API qui aide les utilisateurs à agir positivement selon leur humeur.
+Chaque jour, elle suggère une action bienveillante ou constructive, adaptée à l’état émotionnel du moment — qui fait du bien à soi et aux autres.
+En réalisant ces actions, on gagne des points permettant de faire pousser un arbre ou plante virtuelle (symbole de croissance personnelle et collective).
+
+Le nom "Reet" évoque root les racines et l'action quotidienne, le mantra "rite". Ce peut être aussi e-reet : héritage, hériter ou l'action du virtuel applicable dans le monde réel.
+
+Objectifs
+
+Encourager des micro-actions concrètes et non naïves : parler à un voisin isolé, ranger son espace, écrire à quelqu’un qu’on apprécie, faire une vraie pause, aider à une tâche locale, etc.
+Promouvoir un équilibre entre bienveillance, introspection et action.
+Gamifier la progression : points, niveaux, arbre ou plante qui grandit.
+
+Architecture conceptuelle
+
+1. Moods (états d’humeur)
+
+Exemples : fatigué-e, stressé-e, motivé-e, triste, joyeux-se, solitaire, colérique.
+
+Endpoint : POST /mood
+-> L’utilisateur envoie son humeur actuelle.
+
+
+
+Actions suggérées (Good deeds)
+
+Chaque humeur renvoie une liste d’actions recommandées, avec :
+
+un titre ("Fais une balade sans ton téléphone")
+
+un type ("self-care" | "social" | "eco" | "creative")
+
+une difficulté (1–3)
+
+des points
+
+un impact émotionnel attendu
+
+Endpoint :
+
+GET /suggestion?mood=stressé-e
+
+POST /complete/{action_id} → ajoute les points au profil.
+
+
+
+Profil utilisateur
+
+Données :
+username
+current_points
+level
+tree_stage (1 = graine 🌱, 5 = grand arbre 🌳)
+mood_history
+actions_completed
+
+Endpoints :
+GET /user/{id}
+GET /user/{id}/progress
+
+
+Arbre virtuel / croissance :
+
+La croissance de l’arbre se fait par palier de points.
+Ex. :
+
+0–20 pts -> 🌱
+
+21–50 pts -> 🌿
+
+51–100 pts -> 🌳
+
+Endpoint : GET /tree/{user_id}
+
+
+
+Exemples d’actions
+
+Humeur	     Type	                      Action	                                                                      Impact
+stressé-e	   self-care	        Range ton espace de travail pour 10 min.	                                           recentrage
+fatigué-e	    social	          Envoie un message sincère à quelqu’un que tu apprécies.	                             lien social
+triste	     creative	          Écris ce que tu ressens, mais en rimes ou poésie.	                                   expression
+joyeux-se	   social	            Propose un café à un ou une collègue que tu connais peu.	                           ouverture
+colérique	   self-control	      Éteins ton téléphone pendant 15 min et respire.	                                     apaisement
+seul-e	     social	            Fais un compliment sincère à un ou une inconnue.	                                   connexion
+motivé-e	   contribution	      Donne ton temps à un projet local ou aide un voisin.                                 collaboration
+
+
+Exemple de workflow utilisateur-ice
+
+L’utilisateur envoie son humeur :
+POST /mood → {"mood": "stressé-e"}
+
+L’API répond :
+{
+  "suggestions": [
+    {"id": 12, "title": "Range ton espace de travail", "points": 5},
+    {"id": 13, "title": "Va marcher 10 min sans ton téléphone", "points": 8}
+  ]
+}
+
+L’utilisateur fait une action et la valide :
+POST /complete/13
+
+L’API met à jour le profil :
+"points": 13, "tree_stage": "🌿"
+
+STACK
+fastapi -> framework API 
+uvicorn -> serveur pour lancer l’API localement
+sqlmodel -> ORM pour SQLite
+
+Structure du projet
+reet/
+├─ main.py          # point d’entrée de l’API
+├─ models.py        # définition des modèles (User, Mood, Action)
+├─ database.py      # connexion SQLite
+├─ actions.json     # liste d’actions avec points, type, humeur
+└─ requirements.txt # dépendances
+
+Installation projet :
+pip install -r requirements.txt
